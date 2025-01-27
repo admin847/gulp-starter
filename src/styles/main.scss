@@ -1,12 +1,12 @@
-@import "helpers/variables";
-@import "helpers/mixins";
-@import "helpers/functions";
+@use "helpers/variables";
+@use "helpers/mixins";
+@use "helpers/functions";
 
-@import "base/normalize";
+@use "base/normalize";
 
-@import "../libs/libs";
+@use "../libs/libs";
 
-@import "base/fonts";
-@import "base/general";
+@use "base/fonts";
+@use "base/general";
 
-@import "../blocks/blocks";
+@use "../blocks/blocks";

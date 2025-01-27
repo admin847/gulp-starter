@@ -1,6 +1,5 @@
 import dartSass from 'sass';
 import gulpSass from 'gulp-sass';
-import gcmq from 'gulp-group-css-media-queries';
 import autoPrefixer from 'gulp-autoprefixer';
 import cleanCss from 'gulp-clean-css';
 
@@ -11,7 +10,6 @@ export const styles = () => {
     .pipe(sass({
       outputStyle: 'compressed',
     }))
-    .pipe(app.plugins.if(app.isProd, gcmq()))
     .pipe(app.plugins.if(app.isProd, autoPrefixer({
       grid: true,
       overrideBrowserslist: ['last 3 versions'],

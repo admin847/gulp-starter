@@ -1,43 +1,161 @@
-@mixin w($width) {
-  @media screen and (min-width: #{$width + px}) {
-    @content;
+@use "functions";
+@use "variables";
+
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal) {
+  @font-face {
+    font-family: $font-family;
+    src: url('#{$file-path}.woff2') format('woff2'),
+    url('#{$file-path}.ttf') format('truetype');
+    font-display: swap;
+    font-weight: $weight;
+    font-style: $style;
   }
 }
 
-@mixin mw($width) {
-  @media screen and (max-width: #{$width + px}) {
-    @content;
-  }
-}
-
-@mixin h($height) {
-  @media screen and (max-height: $height) {
-    @content;
-  }
-}
-
-$maxWidth: 1920;
-
-@mixin adaptive-font($pcSize, $mobSize) {
-  $addSize: $pcSize - $mobSize;
-  $addMobSize: $addSize + $addSize * 0.7;
-
-  @media (max-width: 767px) {
-    font-size: calc(#{$mobSize + px} + #{$addMobSize} * ((100vw - 320px) / #{$maxWidth}));
-  }
-
-  @media (min-width: 767px) {
-    font-size: calc(#{$mobSize + px} + #{$addSize} * (100vw / #{$maxWidth}));
-  }
-}
-
-@mixin visuallyhidden {
+@mixin visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
   margin: -1px;
   border: 0;
   padding: 0;
+
+  white-space: nowrap;
+  clip-path: inset(100%);
   clip: rect(0 0 0 0);
   overflow: hidden;
 }
+
+@mixin w($width) {
+  @media screen and (min-width: functions.rem($width)) {
+    & {
+      @content;
+    }
+  }
+}
+
+@mixin h($height) {
+  @media screen and (min-height: functions.rem($height)) {
+    & {
+      @content;
+    }
+  }
+}
+
+@mixin mw($width) {
+  @media screen and (max-width: functions.rem($width)) {
+    & {
+      @content;
+    }
+  }
+}
+
+@mixin tablet {
+  & {
+    @include w(744) {
+      @content;
+    }
+  }
+}
+
+@mixin tablet-md {
+  & {
+    @include w(960) {
+      @content;
+    }
+  }
+}
+
+@mixin desktop {
+  & {
+    @include w(1025) {
+      @content;
+    }
+  }
+}
+
+@mixin desktop-md {
+  & {
+    @include w(1280) {
+      @content;
+    }
+  }
+}
+
+@mixin desktop-lg {
+  & {
+    @include w(1440) {
+      @content;
+    }
+  }
+}
+
+@mixin desktop-xl {
+  & {
+    @include w(1600) {
+      @content;
+    }
+  }
+}
+
+@mixin desktop-xxl {
+  & {
+    @include w(1920) {
+      @content;
+    }
+  }
+}
+
+@mixin adaptive-font($pcSize, $mobSize) {
+  $addSize: $pcSize - $mobSize;
+  $addMobSize: $addSize + $addSize * 0.7;
+
+  @media (max-width: functions.rem(767)) {
+    font-size: calc(#{$mobSize + px} + #{$addMobSize} * ((100vw - functions.rem(375)) / #{variables.$container-width}));
+  }
+
+  @media (min-width: functions.rem(767)) {
+    font-size: calc(#{$mobSize + px} + #{$addSize} * (100vw / #{variables.$container-width}));
+  }
+
+  @media (min-width: functions.rem(variables.$container-width)) {
+    font-size: functions.rem($pcSize);
+  }
+}
+
+@mixin heightVh($height) {
+  height: #{$height + vh};
+  @supports (height: #{$height + dvh}) {
+    height: #{$height + dvh};
+  }
+}
+
+@mixin minHeightVh($height) {
+  min-height: #{$height + vh};
+  @supports (min-height: #{$height + dvh}) {
+    min-height: #{$height + dvh};
+  }
+}
+
+@mixin maxHeightVh($heightVh, $heightDvh) {
+  max-height: #{$heightVh + vh};
+  @supports (max-height: #{$heightDvh + dvh}) {
+    max-height: #{$heightDvh + dvh};
+  }
+}
+
+// mixin for multiline
+@mixin multiLineEllipsis($line-height: 1.2, $lines-to-show) {
+  display: block; // Fallback for non-webkit
+  display: -webkit-box;
+  height: 1em*$line-height*$lines-to-show; // Fallback for non-webkit
+  line-height: $line-height;
+  -webkit-line-clamp: $lines-to-show;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+// Usage
+//  p {
+//    @include multiLineEllipsis($line-height: 1.4, $lines-to-show: 10);
+//  }

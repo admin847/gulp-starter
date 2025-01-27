@@ -12,8 +12,8 @@ import { copyFonts } from './gulp/tasks/copyFonts.js';
 import { copyImages } from './gulp/tasks/copyImages.js';
 
 global.app = {
-  isDev: process.argv.includes('--build'),
-  isProd: !process.argv.includes('--build'),
+  isDev: !process.argv.includes('--build'),
+  isProd: process.argv.includes('--build'),
   gulp: gulp,
   path: path,
   plugins: plugins,
